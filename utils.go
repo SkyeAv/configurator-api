@@ -1,9 +1,5 @@
 package main
 
-import "log"
-
-func CheckErr(code uint16, err error) {
-	if err != nil {
-		log.Fatalf("%d | ERROR | %v", code, err)
-	}
+func CheckErr(err error) bool {
+	return err != nil
 }
