@@ -25,7 +25,7 @@ func HypatiaAuth(c *gin.Context, username string, apiKey string) bool {
 
 	hash, err := rdb.Get(ctx, username).Result()
 	if err != nil {
-		c.JSON(500, gin.H{"error": "No registered API Key associated with username"})
+		c.JSON(500, gin.H{"error": "No registered API Key associated with username."})
 		return false
 	}
 
@@ -33,6 +33,6 @@ func HypatiaAuth(c *gin.Context, username string, apiKey string) bool {
 		return true
 	}
 
-	c.JSON(501, gin.H{"error": "Username is associated with a different API Key"})
+	c.JSON(501, gin.H{"error": "Username is associated with a different API Key."})
 	return false
 }

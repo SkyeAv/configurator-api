@@ -107,7 +107,7 @@ func GetCurieInfo(c *gin.Context) {
 	err = row.Scan(&cu.CURIE, &cu.PREFERRED_NAME, &cu.CATEGORY_NAME, &cu.NCBI_TAXON_ID)
 
 	if err != nil {
-		c.JSON(505, gin.H{"error": err.Error(), "cause": "The given curie doesn't resolve to a cannonical curie and should be ommited. Check /search-for-curies/ for cannonical alternatives"})
+		c.JSON(505, gin.H{"error": err.Error(), "cause": "The given curie doesn't resolve to a cannonical curie and should be ommited. Check /search-for-curies/ for cannonical alternatives."})
 		return
 	}
 

@@ -39,7 +39,8 @@ func DownloadFromPMCTars(c *gin.Context) {
 
 	_, err := os.Stat(tarPath)
 	if os.IsNotExist(err) {
-		c.JSON()
+		c.JSON(506, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet."})
+		return
 	}
 
 	return
