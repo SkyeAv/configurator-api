@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -37,11 +38,16 @@ func DownloadFromPMCTars(c *gin.Context) {
 	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[9:], pmcID)
 	tarPath := filepath.Join(pmcTars, suffix)
 
-	_, err := os.Stat(tarPath)
-	if os.IsNotExist(err) {
+	file, err := os.Open(tarPath)
+	if err != nil {
 		c.JSON(506, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet."})
 		return
 	}
+	defer file.Close()
 
-	return
+	disposition := fmt.Sprintf("attachment; filename=%v", tarPath)
+
+	c.Header("Content-Disposition", disposition)
+	c.Header("Content-Type", "application/octet-stream")
+	io.Copy(c.Writer, file)
 }
