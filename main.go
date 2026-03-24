@@ -9,10 +9,10 @@ func health(c *gin.Context) {
 }
 
 func registerRoutes(r *gin.Engine) {
-	r.GET("/health/", health)
-	r.GET("/search-for-curies/", SearchForCuries)
-	r.GET("/get-cannonical-curie-info/", GetCurieInfo)
-	r.GET("/download-from-pmc-tars/", DownloadFromPMCTars)
+	r.GET("/health", health)
+	r.GET("/search-for-curies", SearchForCuries)
+	r.GET("/get-cannonical-curie-info", GetCurieInfo)
+	r.GET("/download-from-pmc-tars", DownloadFromPMCTars)
 }
 
 func main() {

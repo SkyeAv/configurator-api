@@ -12,4 +12,4 @@ dev:
 	go run .
 
 clean:
-	rm $(APP_NAME)
+	rm -f $(NAME)
