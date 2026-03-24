@@ -13,7 +13,7 @@ var p = os.Getenv("DATASSERT_PATH")
 
 func getDB() (*sql.DB, error) {
 	db, err := sql.Open("duckdb", p)
-	if CheckErr(err) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -39,7 +39,7 @@ func searchForCuries(c *gin.Context) {
 	term = strings.ToLower(term)
 
 	db, err := getDB()
-	if CheckErr(err) {
+	if err != nil {
 		c.JSON(502, gin.H{"error": err.Error()})
 		return
 	}
@@ -57,7 +57,7 @@ func searchForCuries(c *gin.Context) {
 	LIMIT 50;
 	`
 	rows, err := db.Query(query, term)
-	if CheckErr(err) {
+	if err != nil {
 		c.JSON(503, gin.H{"error": err.Error(), "cause": "The given term doesn't resolve to a valid curie. Try equivalent terms."})
 		return
 	}
@@ -84,7 +84,7 @@ func getCurieInfo(c *gin.Context) {
 
 	curie := c.Query("curie")
 	db, err := getDB()
-	if CheckErr(err) {
+	if err != nil {
 		c.JSON(502, gin.H{"error": err.Error()})
 		return
 	}
@@ -106,7 +106,7 @@ func getCurieInfo(c *gin.Context) {
 	row := db.QueryRow(query, curie)
 	err = row.Scan(&cu.CURIE, &cu.PREFERRED_NAME, &cu.CATEGORY_NAME, &cu.NCBI_TAXON_ID)
 
-	if CheckErr(err) {
+	if err != nil {
 		c.JSON(503, gin.H{"error": err.Error(), "cause": "The given curie doesn't resolve to a cannonical curie and should be ommited. Check /search-for-curies/ for cannonical alternatives"})
 		return
 	}
