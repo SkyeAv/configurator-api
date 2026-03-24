@@ -33,10 +33,16 @@ func DownloadFromPMCTars(c *gin.Context) {
 	}
 
 	pmcID := c.Query("pmc-id")
+	if pmcID == "" {
+		c.JSON(400, gin.H{"error": "'pmc-id' is a required API parameter"})
+		return
+	}
+
 	pmcID = cleanID(pmcID)
 
 	if len(pmcID) != 12 {
 		c.JSON(400, gin.H{"error": "Invalid PMC ID. Valid IDs are 12 characters in length. They are prefixed with a capital 'PMC' followed 9 digits."})
+		return
 	}
 
 	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[9:], pmcID)

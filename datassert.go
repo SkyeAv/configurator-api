@@ -36,6 +36,11 @@ func SearchForCuries(c *gin.Context) {
 	}
 
 	term := c.Query("term")
+	if term == "" {
+		c.JSON(400, gin.H{"error": "'term' is a required API parameter"})
+		return
+	}
+
 	term = strings.ToLower(term)
 
 	db, err := getDB()
@@ -83,6 +88,11 @@ func GetCurieInfo(c *gin.Context) {
 	}
 
 	curie := c.Query("curie")
+	if curie == "" {
+		c.JSON(400, gin.H{"error": "'curie' is a required API parameter"})
+		return
+	}
+
 	db, err := getDB()
 	if err != nil {
 		c.JSON(503, gin.H{"error": err.Error()})
