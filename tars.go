@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -32,5 +33,14 @@ func DownloadFromPMCTars(c *gin.Context) {
 
 	pmcID := c.Query("pmc-id")
 	pmcID = cleanID(pmcID)
+
+	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[9:], pmcID)
+	tarPath := filepath.Join(pmcTars, suffix)
+
+	_, err := os.Stat(tarPath)
+	if os.IsNotExist(err) {
+		c.JSON()
+	}
+
 	return
 }
