@@ -26,6 +26,7 @@ func auth(c *gin.Context, username string, apiKey string) bool {
 	hash, err := rdb.Get(ctx, username).Result()
 	if CheckErr(err) {
 		c.JSON(500, gin.H{"error": "No registered API Key associated with username"})
+		return false
 	}
 
 	if hash == getHashHex(apiKey) {
