@@ -22,7 +22,9 @@ func auth(username string, apiKey string) bool {
 	rdb := redis.NewClient(opts)
 	defer rdb.Close()
 
-	hash, _ := rdb.Get(ctx, username).Result()
+	hash, err := rdb.Get(ctx, username).Result()
+	CheckErr(1, err)
+
 	if hash == getHashHex(apiKey) {
 		return true
 	}
