@@ -40,7 +40,7 @@ func SearchForCuries(c *gin.Context) {
 
 	db, err := getDB()
 	if err != nil {
-		c.JSON(502, gin.H{"error": err.Error()})
+		c.JSON(503, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -58,7 +58,7 @@ func SearchForCuries(c *gin.Context) {
 	`
 	rows, err := db.Query(query, term)
 	if err != nil {
-		c.JSON(503, gin.H{"error": err.Error(), "cause": "The given term doesn't resolve to a valid curie. Try equivalent terms."})
+		c.JSON(500, gin.H{"error": err.Error(), "cause": "The given term doesn't resolve to a valid curie. Try equivalent terms."})
 		return
 	}
 
@@ -85,7 +85,7 @@ func GetCurieInfo(c *gin.Context) {
 	curie := c.Query("curie")
 	db, err := getDB()
 	if err != nil {
-		c.JSON(504, gin.H{"error": err.Error()})
+		c.JSON(503, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -107,7 +107,7 @@ func GetCurieInfo(c *gin.Context) {
 	err = row.Scan(&cu.CURIE, &cu.PREFERRED_NAME, &cu.CATEGORY_NAME, &cu.NCBI_TAXON_ID)
 
 	if err != nil {
-		c.JSON(505, gin.H{"error": err.Error(), "cause": "The given curie doesn't resolve to a cannonical curie and should be ommited. Check /search-for-curies/ for cannonical alternatives."})
+		c.JSON(404, gin.H{"error": err.Error(), "cause": "The given curie doesn't resolve to a cannonical curie and should be ommited. Check /search-for-curies/ for cannonical alternatives."})
 		return
 	}
 

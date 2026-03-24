@@ -36,7 +36,7 @@ func DownloadFromPMCTars(c *gin.Context) {
 	pmcID = cleanID(pmcID)
 
 	if len(pmcID) != 12 {
-		c.JSON(507, gin.H{"error": "Invalid PMC ID. Valid IDs are 12 characters in length. They are prefixed with a capital 'PMC' followed 9 digits."})
+		c.JSON(400, gin.H{"error": "Invalid PMC ID. Valid IDs are 12 characters in length. They are prefixed with a capital 'PMC' followed 9 digits."})
 	}
 
 	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[9:], pmcID)
@@ -44,7 +44,7 @@ func DownloadFromPMCTars(c *gin.Context) {
 
 	file, err := os.Open(tarPath)
 	if err != nil {
-		c.JSON(506, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet."})
+		c.JSON(404, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet."})
 		return
 	}
 	defer file.Close()
