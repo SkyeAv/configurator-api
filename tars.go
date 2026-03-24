@@ -12,7 +12,7 @@ import (
 
 func cleanID(pmcID string) string {
 	if strings.Contains(pmcID, ":") {
-		pmcID, _, _ = strings.Cut(pmcID, ":")
+		_, pmcID, _ = strings.Cut(pmcID, ":")
 	}
 
 	if !strings.Contains(pmcID, "PMC") {
