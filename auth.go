@@ -19,6 +19,16 @@ func getHashHex(apiKey string) string {
 var ctx = context.Background()
 
 func HypatiaAuth(c *gin.Context, username string, apiKey string) bool {
+	if username == "" {
+		c.JSON(400, gin.H{"error": "'username' is a required API parameter"})
+		return false
+	}
+
+	if apiKey == "" {
+		c.JSON(400, gin.H{"error": "'api-key' is a required API parameter"})
+		return false
+	}
+
 	opts := &redis.Options{Addr: "localhost:6379", Password: "", DB: 0}
 	rdb := redis.NewClient(opts)
 	defer rdb.Close()
