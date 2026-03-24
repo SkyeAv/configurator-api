@@ -11,11 +11,11 @@ import (
 )
 
 func cleanID(pmcID string) string {
-	if strings.Contains(":", pmcID) {
+	if strings.Contains(pmcID, ":") {
 		pmcID, _, _ = strings.Cut(pmcID, ":")
 	}
 
-	if !strings.Contains("PMC", pmcID) {
+	if !strings.Contains(pmcID, "PMC") {
 		pmcID = fmt.Sprintf("PMC%v", pmcID)
 	}
 
@@ -35,6 +35,10 @@ func DownloadFromPMCTars(c *gin.Context) {
 	pmcID := c.Query("pmc-id")
 	pmcID = cleanID(pmcID)
 
+	if len(pmcID) != 12 {
+		c.JSON(507, gin.H{"error": "Invalid PMC ID. Valid IDs are 12 characters in length. They are prefixed with a capital 'PMC' followed 9 digits."})
+	}
+
 	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[9:], pmcID)
 	tarPath := filepath.Join(pmcTars, suffix)
 
@@ -45,7 +49,7 @@ func DownloadFromPMCTars(c *gin.Context) {
 	}
 	defer file.Close()
 
-	disposition := fmt.Sprintf("attachment; filename=%v", tarPath)
+	disposition := fmt.Sprintf("attachment; filename=%v.tar.xz", pmcID)
 
 	c.Header("Content-Disposition", disposition)
 	c.Header("Content-Type", "application/octet-stream")
