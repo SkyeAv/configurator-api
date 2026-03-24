@@ -27,7 +27,15 @@ type CurieResult struct {
 	NCBI_TAXON_ID  int
 }
 
-func searchForCuries(c *gin.Context, term string) {
+func searchForCuries(c *gin.Context) {
+	username := c.Query("username")
+	apiKey := c.Query("api-key")
+
+	if !HypatiaAuth(c, username, apiKey) {
+		return
+	}
+
+	term := c.Query("term")
 	term = strings.ToLower(term)
 
 	db, err := getDB()

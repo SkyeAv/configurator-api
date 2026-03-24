@@ -10,6 +10,7 @@ func health(c *gin.Context) {
 
 func registerRoutes(r *gin.Engine) {
 	r.GET("/health/", health)
+	r.GET("/search-for-curies/")
 }
 
 func main() {

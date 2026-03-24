@@ -18,7 +18,7 @@ func getHashHex(apiKey string) string {
 
 var ctx = context.Background()
 
-func auth(c *gin.Context, username string, apiKey string) bool {
+func HypatiaAuth(c *gin.Context, username string, apiKey string) bool {
 	opts := &redis.Options{Addr: "localhost:6379", Password: "", DB: 0}
 	rdb := redis.NewClient(opts)
 	defer rdb.Close()
