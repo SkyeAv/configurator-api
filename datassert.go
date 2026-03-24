@@ -9,10 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var p = os.Getenv("DATASSERT_PATH")
+var datassert = os.Getenv("DATASSERT_PATH")
 
 func getDB() (*sql.DB, error) {
-	db, err := sql.Open("duckdb", p)
+	db, err := sql.Open("duckdb", datassert)
 	if err != nil {
 		return nil, err
 	}
