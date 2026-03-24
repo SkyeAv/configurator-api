@@ -27,7 +27,7 @@ type CurieResult struct {
 	NCBI_TAXON_ID  int    `json:"NCBI_TAXON_ID,omitempty"`
 }
 
-func searchForCuries(c *gin.Context) {
+func SearchForCuries(c *gin.Context) {
 	username := c.Query("username")
 	apiKey := c.Query("api-key")
 
@@ -74,7 +74,7 @@ func searchForCuries(c *gin.Context) {
 	c.JSON(200, gin.H{"curies": curies})
 }
 
-func getCurieInfo(c *gin.Context) {
+func GetCurieInfo(c *gin.Context) {
 	username := c.Query("username")
 	apiKey := c.Query("api-key")
 
