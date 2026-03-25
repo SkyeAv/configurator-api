@@ -6,7 +6,7 @@ build:
 	go build -o $(NAME) .
 
 run:
-	build ./$(NAME)
+	./$(NAME)
 
 dev:
 	go run .
