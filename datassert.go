@@ -78,6 +78,73 @@ func SearchForCuries(c *gin.Context) {
 	c.JSON(200, gin.H{"curies": curies})
 }
 
+func cleanTaxon(taxonID string) string {
+	if strings.Contains(taxonID, ":") {
+		_, taxonID, _ = strings.Cut(taxonID, ":")
+	}
+
+	return taxonID
+}
+
+func SearchForGeneCuriesInNCBITaxon(c *gin.Context) {
+	username := c.Query("username")
+	apiKey := c.Query("api-key")
+
+	if !HypatiaAuth(c, username, apiKey) {
+		return
+	}
+
+	taxonID := c.Query("ncbi-taxon-id")
+	if taxonID == "" {
+		c.JSON(400, gin.H{"error": "'ncbi-taxon-id' is a required API parameter"})
+		return
+	}
+
+	taxonID = cleanTaxon(taxonID)
+
+	term := c.Query("term")
+	if term == "" {
+		c.JSON(400, gin.H{"error": "'term' is a required API parameter"})
+		return
+	}
+
+	term = strings.ToLower(term)
+
+	db, err := getDB()
+	if err != nil {
+		c.JSON(503, gin.H{"error": err.Error()})
+		return
+	}
+
+	query := `
+	SELECT
+		C.CURIE,
+		C.PREFERRED_NAME,
+		G.CATEGORY_NAME,
+		C.TAXON_ID
+	FROM SYNONYMS S
+	JOIN CURIES C ON S.CURIE_ID = C.CURIE_ID
+	JOIN CATEGORIES G ON C.CATEGORY_ID = G.CATEGORY_ID
+	WHERE C.TAXON_ID = ? AND G.CATEGORY_NAME = 'Gene' AND S.SYNONYM = ?;
+	`
+	rows, err := db.Query(query, taxonID, term)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error(), "cause": "The given term doesn't resolve to a valid curie. Try equivalent terms."})
+		return
+	}
+
+	defer rows.Close()
+	curies := []CurieResult{}
+
+	for rows.Next() {
+		cu := CurieResult{}
+		_ = rows.Scan(&cu.CURIE, &cu.PREFERRED_NAME, &cu.CATEGORY_NAME, &cu.NCBI_TAXON_ID)
+		curies = append(curies, cu)
+	}
+
+	c.JSON(200, gin.H{"curies": curies})
+}
+
 func GetCurieInfo(c *gin.Context) {
 	username := c.Query("username")
 	apiKey := c.Query("api-key")

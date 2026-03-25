@@ -13,6 +13,7 @@ func registerRoutes(r *gin.Engine) {
 	r.GET("/search-for-curies", SearchForCuries)
 	r.GET("/get-canonical-curie-info", GetCurieInfo)
 	r.GET("/download-from-pmc-tars", DownloadFromPMCTars)
+	r.GET("/search-for-gene-curies-in-ncbi-taxon", SearchForGeneCuriesInNCBITaxon)
 }
 
 func main() {
