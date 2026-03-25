@@ -81,6 +81,7 @@ go test -cover ./...
 | `GET` | `/search-for-curies` | Yes | Search CURIE candidates by term |
 | `GET` | `/get-canonical-curie-info` | Yes | Resolve one canonical CURIE record |
 | `GET` | `/download-from-pmc-tars` | Yes | Download a PMC TAR archive |
+| `GET` | `/search-for-gene-curies-in-ncbi-taxon` | Yes | Search gene CURIE candidates by term within one NCBI taxon |
 
 ## Endpoint Details
 
@@ -186,6 +187,44 @@ Example:
 ```bash
 curl -L -o PMC123456789.tar.xz \
   "http://localhost:8550/download-from-pmc-tars?username=$API_USERNAME&api-key=$API_KEY&pmc-id=PMC123456789"
+```
+
+### `GET /search-for-gene-curies-in-ncbi-taxon`
+
+Required query params:
+- `username` (string)
+- `api-key` (string)
+- `ncbi-taxon-id` (string)
+- `term` (string)
+
+Accepted `ncbi-taxon-id` input forms include:
+- `9606`
+- `NCBITaxon:9606` (service keeps only the value after `:`)
+
+Behavior:
+- Lowercases `term`
+- Filters to rows where taxon matches `ncbi-taxon-id`
+- Filters to category name `Gene`
+
+Example:
+
+```bash
+curl "http://localhost:8550/search-for-gene-curies-in-ncbi-taxon?username=$API_USERNAME&api-key=$API_KEY&ncbi-taxon-id=NCBITaxon:9606&term=brca1"
+```
+
+Success response shape:
+
+```json
+{
+  "curies": [
+    {
+      "CURIE": "HGNC:1100",
+      "PREFERRED_NAME": "BRCA1",
+      "CATEGORY_NAME": "Gene",
+      "NCBI_TAXON_ID": 9606
+    }
+  ]
+}
 ```
 
 ## Common Error Codes
