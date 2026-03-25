@@ -1,2 +1,6 @@
 tunnel: UUID
 credentials-file: credentials.json
+
+ingress:
+  - service: http://localhost:8550
+  - service: http_status:503
