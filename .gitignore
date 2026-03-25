@@ -2,3 +2,4 @@
 *.opencode
 *.envrc
 *configurator-api
+*credentials.json
