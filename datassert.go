@@ -58,8 +58,7 @@ func SearchForCuries(c *gin.Context) {
 	FROM SYNONYMS S
 	JOIN CURIES C ON S.CURIE_ID = C.CURIE_ID
 	JOIN CATEGORIES G ON C.CATEGORY_ID = G.CATEGORY_ID
-	WHERE S.SYNONYM = ?
-	LIMIT 50;
+	WHERE S.SYNONYM = ?;
 	`
 	rows, err := db.Query(query, term)
 	if err != nil {
