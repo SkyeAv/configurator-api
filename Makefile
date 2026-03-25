@@ -5,7 +5,7 @@ NAME = configurator-api
 build:
 	go build -o $(NAME) .
 
-run:
+run: build
 	./$(NAME)
 
 dev:
