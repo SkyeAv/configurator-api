@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
 
 	"github.com/cespare/xxhash/v2"
@@ -10,10 +11,13 @@ import (
 )
 
 func getHashHex(apiKey string) string {
-	data := []byte(apiKey)
-	asInt := xxhash.Sum64(data)
+	dataSha := []byte(apiKey)
+	asIntSha := sha256.Sum256(dataSha)
+	asHexSha := fmt.Sprintf("%x", asIntSha)
 
-	return fmt.Sprintf("%x", asInt)
+	dataX := []byte(asHexSha)
+	asIntX := xxhash.Sum64(dataX)
+	return fmt.Sprintf("%x", asIntX)
 }
 
 var ctx = context.Background()
