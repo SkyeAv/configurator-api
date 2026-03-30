@@ -5,13 +5,14 @@ on:
       - master
 permissions:
   contents: write
-  jobs:
-    hypatia-binary:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Release Linux AMD64
-          uses: wangyoucao577/go-release-action@v1
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            goos: linux
-            goarch: amd64
+  packages: write
+jobs:
+  hypatia-binary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Linux AMD64
+        uses: wangyoucao577/go-release-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: linux
+          goarch: amd64
