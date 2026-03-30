@@ -2,17 +2,21 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"strings"
 
+	"github.com/cespare/xxhash/v2"
 	_ "github.com/duckdb/duckdb-go/v2"
 	"github.com/gin-gonic/gin"
 )
 
 var datassert = os.Getenv("DATASSERT_PATH")
 
-func getDB() (*sql.DB, error) {
-	db, err := sql.Open("duckdb", datassert)
+func getDB(shard uint) (*sql.DB, error) {
+	p := fmt.Sprintf("%v/data/%d.duckdb", datassert, shard)
+
+	db, err := sql.Open("duckdb", p)
 	if err != nil {
 		return nil, err
 	}
@@ -25,6 +29,13 @@ type CurieResult struct {
 	PREFERRED_NAME string `json:"PREFERRED_NAME"`
 	CATEGORY_NAME  string `json:"CATEGORY_NAME"`
 	NCBI_TAXON_ID  int    `json:"NCBI_TAXON_ID,omitempty"`
+}
+
+func getShard(term string) uint {
+	b := []byte(term)
+	h := xxhash.Sum64(b)
+
+	return uint(h) % 16
 }
 
 func SearchForCuries(c *gin.Context) {
@@ -42,8 +53,9 @@ func SearchForCuries(c *gin.Context) {
 	}
 
 	term = strings.ToLower(term)
+	shard := getShard(term)
 
-	db, err := getDB()
+	db, err := getDB(shard)
 	if err != nil {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
@@ -108,9 +120,9 @@ func SearchForGeneCuriesInNCBITaxon(c *gin.Context) {
 		return
 	}
 
-	term = strings.ToLower(term)
+	shard := getShard(term)
 
-	db, err := getDB()
+	db, err := getDB(shard)
 	if err != nil {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
@@ -159,7 +171,9 @@ func GetCurieInfo(c *gin.Context) {
 		return
 	}
 
-	db, err := getDB()
+	shard := getShard(curie)
+
+	db, err := getDB(shard)
 	if err != nil {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
