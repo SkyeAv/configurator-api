@@ -31,11 +31,13 @@ type CurieResult struct {
 	NCBI_TAXON_ID  int    `json:"NCBI_TAXON_ID,omitempty"`
 }
 
+const shards = 16
+
 func getShard(term string) uint {
 	b := []byte(term)
 	h := xxhash.Sum64(b)
 
-	return uint(h) % 16
+	return uint(h) % shards
 }
 
 func SearchForCuries(c *gin.Context) {
