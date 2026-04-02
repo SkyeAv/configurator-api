@@ -173,6 +173,7 @@ func GetCurieInfo(c *gin.Context) {
 		return
 	}
 
+	curie = strings.ToLower(curie)
 	shard := getShard(curie)
 
 	db, err := getDB(shard)
@@ -204,4 +205,55 @@ func GetCurieInfo(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"curie": cu})
+}
+
+type TaxonResult struct {
+	NCBI_TAXON_ID string `json:"CURIE"`
+}
+
+func GetTaxonIDFromName(c *gin.Context) {
+	username := c.Query("username")
+	apiKey := c.Query("api-key")
+
+	if !HypatiaAuth(c, username, apiKey) {
+		return
+	}
+
+	name := c.Query("organism-name")
+	if name == "" {
+		c.JSON(400, gin.H{"error": "'organism-name' is a required API parameter"})
+		return
+	}
+
+	name = strings.ToLower(name)
+	shard := getShard(name)
+
+	db, err := getDB(shard)
+	if err != nil {
+		c.JSON(503, gin.H{"error": err.Error()})
+		return
+	}
+
+	query := `
+	SELECT C.CURIE
+	FROM SYNONYMS S
+	JOIN CURIES C ON S.CURIE_ID = C.CURIE_ID
+	JOIN CATEGORIES G ON C.CATEGORY_ID = G.CATEGORY_ID
+	WHERE S.SYNONYM = ?
+		AND G.CATEGORY_NAME = 'OrganismTaxon'
+		AND starts_with(C.CURIE, 'NCBITaxon:')
+	LIMIT 1;
+	`
+	tr := TaxonResult{}
+
+	row := db.QueryRow(query, name)
+	err = row.Scan(&tr.NCBI_TAXON_ID)
+
+	if err != nil {
+		c.JSON(404, gin.H{"error": err.Error(), "cause": "The given organism name doesn't resolve to a valid NCBITaxon ID. Try equivalent terms."})
+		return
+	}
+
+	taxonID := cleanTaxon(tr.NCBI_TAXON_ID)
+	c.JSON(200, gin.H{"ncbi-taxon-id": taxonID})
 }
