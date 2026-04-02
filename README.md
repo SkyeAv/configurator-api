@@ -82,6 +82,7 @@ go test -cover ./...
 | `GET` | `/get-canonical-curie-info` | Yes | Resolve one canonical CURIE record |
 | `GET` | `/download-from-pmc-tars` | Yes | Download a PMC TAR archive |
 | `GET` | `/search-for-gene-curies-in-ncbi-taxon` | Yes | Search gene CURIE candidates by term within one NCBI taxon |
+| `GET` | `/get-ncbi-taxon-id-from-organism-name` | Yes | Resolve an NCBI Taxon ID from an organism name |
 
 ## Endpoint Details
 
@@ -224,6 +225,32 @@ Success response shape:
       "NCBI_TAXON_ID": 9606
     }
   ]
+}
+```
+
+### `GET /get-ncbi-taxon-id-from-organism-name`
+
+Required query params:
+- `username` (string)
+- `api-key` (string)
+- `organism-name` (string)
+
+Behavior:
+- Lowercases `organism-name`
+- Looks up synonym in the `OrganismTaxon` category
+- Returns `404` if the name doesn't resolve to a valid NCBITaxon ID
+
+Example:
+
+```bash
+curl "http://localhost:8550/get-ncbi-taxon-id-from-organism-name?username=$API_USERNAME&api-key=$API_KEY&organism-name=human"
+```
+
+Success response shape:
+
+```json
+{
+  "ncbi-taxon-id": "9606"
 }
 ```
 
