@@ -39,7 +39,7 @@ func DownloadFromPMCTars(c *gin.Context) {
 	}
 
 	pmcID = cleanID(pmcID)
-	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[9:], pmcID)
+	suffix := fmt.Sprintf("%v/%v.tar.xz", pmcID[len(pmcID)-3:], pmcID)
 	tarPath := filepath.Join(pmcTars, suffix)
 
 	file, err := os.Open(tarPath)
