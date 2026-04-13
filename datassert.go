@@ -31,7 +31,7 @@ type CurieResult struct {
 	NCBI_TAXON_ID  int    `json:"NCBI_TAXON_ID,omitempty"`
 }
 
-const shards = 12
+const shards = 8
 
 func getShard(term string) uint {
 	b := []byte(term)
