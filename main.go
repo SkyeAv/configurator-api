@@ -15,6 +15,7 @@ func registerRoutes(r *gin.Engine) {
 	r.GET("/download-from-pmc-tars", DownloadFromPMCTars)
 	r.GET("/search-for-gene-curies-in-ncbi-taxon", SearchForGeneCuriesInNCBITaxon)
 	r.GET("/get-ncbi-taxon-id-from-organism-name", GetTaxonIDFromName)
+	r.GET("/tablassist-macos-apple-silicon-zsh-installer", MacOSAppleSiliconZshInstaller)
 }
 
 func main() {

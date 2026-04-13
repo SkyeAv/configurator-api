@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var macOSAppleSiliconZshInstallScript string = os.Getenv("MAC_OS_APPLE_SILICON_INSTALL_SCRIPT")
+var macOSAppleSiliconZshInstallScript string = os.Getenv("MAC_OS_APPLE_SILICON_ZSH_INSTALL_SCRIPT")
 
 func MacOSAppleSiliconZshInstaller(c *gin.Context) {
 	file, err := os.Open(macOSAppleSiliconZshInstallScript)
