@@ -22,7 +22,7 @@ func cleanID(pmcID string) string {
 	return pmcID
 }
 
-var pmcTars = os.Getenv("PMC_TARS_PATH")
+var pmcTars string = os.Getenv("PMC_TARS_PATH")
 
 func DownloadFromPMCTars(c *gin.Context) {
 	username := c.Query("username")
