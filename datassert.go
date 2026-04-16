@@ -62,6 +62,7 @@ func SearchForCuries(c *gin.Context) {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
 	}
+	defer db.Close()
 
 	query := `
 	SELECT
@@ -129,6 +130,7 @@ func SearchForGeneCuriesInNCBITaxon(c *gin.Context) {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
 	}
+	defer db.Close()
 
 	query := `
 	SELECT
@@ -181,6 +183,7 @@ func GetCurieInfo(c *gin.Context) {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
 	}
+	defer db.Close()
 
 	query := `
 	SELECT
@@ -233,6 +236,7 @@ func GetTaxonIDFromName(c *gin.Context) {
 		c.JSON(503, gin.H{"error": err.Error()})
 		return
 	}
+	defer db.Close()
 
 	query := `
 	SELECT C.CURIE
