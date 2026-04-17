@@ -21,7 +21,7 @@ func cleanID(pmcID string) string {
 	return pmcID
 }
 
-var pmcTars string = os.Getenv("PMC_TARS_PATH")
+const pmcTars string = "/15TB_1/users/gglusman/PMC/tars"
 
 func DownloadFromPMCTars(c *gin.Context) {
 	username := c.Query("username")
@@ -43,7 +43,7 @@ func DownloadFromPMCTars(c *gin.Context) {
 
 	file, err := os.Open(tarPath)
 	if err != nil {
-		c.JSON(404, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet.", "tar-path": tarPath})
+		c.JSON(404, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet."})
 		return
 	}
 	defer file.Close()

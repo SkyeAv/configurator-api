@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var macOSAppleSiliconZshInstallScript string = os.Getenv("MAC_OS_APPLE_SILICON_ZSH_INSTALL_SCRIPT")
+const macOSAppleSiliconZshInstallScript string = "/ssd2/sgoetz/tablassist-suite-macos-apple-silicon-zsh-installer.zsh"
 
 func MacOSAppleSiliconZshInstaller(c *gin.Context) {
 	file, err := os.Open(macOSAppleSiliconZshInstallScript)

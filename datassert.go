@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/cespare/xxhash/v2"
@@ -11,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var datassert = os.Getenv("DATASSERT_PATH")
+const datassert string = "/ssd2/sgoetz/datassert"
 
 func getDB(shard uint) (*sql.DB, error) {
 	p := fmt.Sprintf("%v/data/%d.duckdb", datassert, shard)
