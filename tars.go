@@ -43,7 +43,7 @@ func DownloadFromPMCTars(c *gin.Context) {
 
 	file, err := os.Open(tarPath)
 	if err != nil {
-		c.JSON(404, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet."})
+		c.JSON(404, gin.H{"error": err.Error(), "cause": "The specified PMC tar package hasn't been downloaded yet.", "tar-path": tarPath})
 		return
 	}
 	defer file.Close()
