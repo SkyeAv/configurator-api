@@ -11,11 +11,9 @@ func health(c *gin.Context) {
 func registerRoutes(r *gin.Engine) {
 	r.GET("/health", health)
 	r.GET("/search-for-curies", SearchForCuries)
-	r.GET("/get-canonical-curie-info", GetCurieInfo)
 	r.GET("/download-from-pmc-tars", DownloadFromPMCTars)
 	r.GET("/search-for-gene-curies-in-ncbi-taxon", SearchForGeneCuriesInNCBITaxon)
 	r.GET("/get-ncbi-taxon-id-from-organism-name", GetTaxonIDFromName)
-	r.GET("/tablassist-macos-apple-silicon-zsh-installer", MacOSAppleSiliconZshInstaller)
 }
 
 func main() {

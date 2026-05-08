@@ -160,55 +160,6 @@ func SearchForGeneCuriesInNCBITaxon(c *gin.Context) {
 	c.JSON(200, gin.H{"curies": curies})
 }
 
-func GetCurieInfo(c *gin.Context) {
-	username := c.Query("username")
-	apiKey := c.Query("api-key")
-
-	if !HypatiaAuth(c, username, apiKey) {
-		return
-	}
-
-	curie := c.Query("curie")
-	if curie == "" {
-		c.JSON(400, gin.H{"error": "'curie' is a required API parameter"})
-		return
-	}
-
-	curie = strings.ToLower(curie)
-	shard := getShard(curie)
-
-	db, err := getDB(shard)
-	if err != nil {
-		c.JSON(503, gin.H{"error": err.Error()})
-		return
-	}
-	defer db.Close()
-
-	query := `
-	SELECT
-		C.CURIE,
-		C.PREFERRED_NAME,
-		G.CATEGORY_NAME,
-		C.TAXON_ID
-	FROM SYNONYMS S
-	JOIN CURIES C ON S.CURIE_ID = C.CURIE_ID
-	JOIN CATEGORIES G ON C.CATEGORY_ID = G.CATEGORY_ID
-	WHERE S.SYNONYM = ?
-	LIMIT 1;
-	`
-
-	cu := CurieResult{}
-	row := db.QueryRow(query, curie)
-	err = row.Scan(&cu.CURIE, &cu.PREFERRED_NAME, &cu.CATEGORY_NAME, &cu.NCBI_TAXON_ID)
-
-	if err != nil {
-		c.JSON(404, gin.H{"error": err.Error(), "cause": "The given curie doesn't resolve to a canonical curie and should be ommited. Check /search-for-curies for canonical alternatives."})
-		return
-	}
-
-	c.JSON(200, gin.H{"curie": cu})
-}
-
 type TaxonResult struct {
 	NCBI_TAXON_ID string `json:"CURIE"`
 }
