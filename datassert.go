@@ -122,6 +122,7 @@ func SearchForGeneCuriesInNCBITaxon(c *gin.Context) {
 		return
 	}
 
+	term = strings.ToLower(term)
 	shard := getShard(term)
 
 	db, err := getDB(shard)
